@@ -51,6 +51,19 @@ services:
       - KONG_PG_DATABASE=kong
       - KONG_ADMIN_LISTEN=0.0.0.0:8001
 
+  consul:
+    image: bitnami/consul:1
+    container_name: consul
+    # volumes:
+    #   - consul_data:/bitnami
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8301:8301/udp'
+      - '8500:8500'
+      - '8600:8600'
+      - '8600:8600/udp'
+
   tweets:
     build: ./tweets
     container_name: microservice_tweets
