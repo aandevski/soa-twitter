@@ -1,9 +1,10 @@
 import sys
 import consulate
+import os
 
 
 def register():
-    consul = consulate.Consul(host='consul', port=8500)
+    consul = consulate.Consul(host=os.environ['CONSUL_HOST'], port=os.environ['CONSUL_PORT'])
 
     for i, arg in enumerate(sys.argv):
         if arg == '-b':
