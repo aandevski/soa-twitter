@@ -14,6 +14,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - soa-twitter
 
   kong-migrations:
     image: kong:latest
@@ -30,6 +32,8 @@ services:
     links:
       - kong-database
     restart: on-failure
+    networks:
+      - soa-twitter
 
   kong:
     image: kong:latest
@@ -50,6 +54,13 @@ services:
       - KONG_PG_HOST=kong-database
       - KONG_PG_DATABASE=kong
       - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_DNS_RESOLVER=10.3.0.15:8600
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr 
+    networks:
+      - soa-twitter
 
   consul:
     image: consul:latest
@@ -63,6 +74,9 @@ services:
       - '8500:8500'
       - '8600:8600'
       - '8600:8600/udp'
+    networks:
+      soa-twitter:
+        ipv4_address: 10.3.0.15
 
   tweets:
     build: ./tweets
@@ -71,8 +85,10 @@ services:
     ports:
       - 10001:10001
     environment:
-      - CONSUL_HOST=consul
+      - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+    networks:
+      - soa-twitter
 
   users:
     build: ./users
@@ -81,8 +97,10 @@ services:
     ports:
       - 10002:10002
     environment:
-      - CONSUL_HOST=consul
+      - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+    networks:
+      - soa-twitter
 
   follows:
     build: ./follows
@@ -91,8 +109,10 @@ services:
     ports:
       - 10003:10003
     environment:
-      - CONSUL_HOST=consul
+      - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+    networks:
+      - soa-twitter
 
   favorites:
     build: ./favorites
@@ -101,5 +121,15 @@ services:
     ports:
       - 10004:10004
     environment:
-      - CONSUL_HOST=consul
+      - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+    networks:
+      - soa-twitter
+
+networks:
+  soa-twitter:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 10.3.0.0/16
+         gateway: 10.3.0.1
