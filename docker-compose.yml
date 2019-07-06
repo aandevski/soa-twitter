@@ -6,6 +6,7 @@ services:
     container_name: kong-database
     environment:
       - POSTGRES_USER=kong
+      - POSTGRES_PASSWORD=kong
       - POSTGRES_DB=kong
     ports:
     - "5433:5432"
@@ -29,6 +30,7 @@ services:
       KONG_PG_DATABASE: kong
       KONG_PG_HOST: kong-database
       KONG_PG_USER: kong
+      KONG_PG_PASSWORD: kong
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
@@ -57,6 +59,8 @@ services:
       - KONG_DATABASE=postgres
       - KONG_PG_HOST=kong-database
       - KONG_PG_DATABASE=kong
+      - KONG_PG_USER=kong
+      - KONG_PG_PASSWORD=kong
       - KONG_ADMIN_LISTEN=0.0.0.0:8001
       - KONG_DNS_RESOLVER=10.3.0.15:8600
       - KONG_PROXY_ACCESS_LOG=/dev/stdout
@@ -69,8 +73,6 @@ services:
   consul:
     image: consul:latest
     container_name: consul
-    # volumes:
-    #   - consul_data:/bitnami
     ports:
       - '8300:8300'
       - '8301:8301'
