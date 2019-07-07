@@ -66,6 +66,16 @@ services:
       soa-twitter:
         ipv4_address: 10.3.0.15
 
+  users_database:
+    image: postgres
+    restart: always
+    container_name: users_database
+    ports: 
+     - "5434:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+
   tweets:
     build: ./tweets
     container_name: microservice_tweets
