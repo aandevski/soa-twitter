@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# configrued at 127.0.0.1:8100
+
+
 curl -i -X POST \
   --url http://$1/services/ \
   --data 'name=tweets' \
