@@ -45,11 +45,10 @@ services:
   kong:
     image: kong:latest
     container_name: kong
-    # volumes:
-    #   - ./kong/kong.conf:/etc/kong/
     depends_on:
       kong-database:
         condition: service_healthy
+    restart: always
     ports:
       - 8000:8000
       - 8443:8443
@@ -62,7 +61,7 @@ services:
       - KONG_PG_USER=kong
       - KONG_PG_PASSWORD=kong
       - KONG_ADMIN_LISTEN=0.0.0.0:8001
-      #- KONG_DNS_RESOLVER=10.3.0.15:8600
+      - KONG_DNS_RESOLVER=10.3.0.15:8600
       - KONG_PROXY_ACCESS_LOG=/dev/stdout
       - KONG_ADMIN_ACCESS_LOG=/dev/stdout
       - KONG_PROXY_ERROR_LOG=/dev/stderr
@@ -93,6 +92,8 @@ services:
     build: ./tweets
     container_name: microservice_tweets
     command: gunicorn --workers=1 -b :10001 app:app
+    depends_on:  
+      - consul
     ports:
       - 10001:10001
     environment:
@@ -105,6 +106,8 @@ services:
     build: ./users
     container_name: microservice_users
     command: gunicorn --workers=1 -b :10002 app:app
+    depends_on:  
+      - consul
     ports:
       - 10002:10002
     environment:
@@ -117,6 +120,8 @@ services:
     build: ./follows
     container_name: microservice_follows
     command: gunicorn --workers=1 -b :10003 app:app
+    depends_on:  
+      - consul
     ports:
       - 10003:10003
     environment:
@@ -129,6 +134,8 @@ services:
     build: ./favorites
     container_name: microservice_favorites
     command: gunicorn --workers=1 -b :10004 app:app
+    depends_on:  
+      - consul
     ports:
       - 10004:10004
     environment:
