@@ -56,7 +56,7 @@ services:
       - 8444:8444
     environment:
       - KONG_DATABASE=postgres
-      - KONG_PG_HOST=kong-database
+      - KONG_PG_HOST=10.3.0.16
       - KONG_PG_DATABASE=kong
       - KONG_PG_USER=kong
       - KONG_PG_PASSWORD=kong
@@ -99,8 +99,11 @@ services:
     environment:
       - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+      - SERVICE_PORT=10001
+      - SERVICE_IP=10.3.0.22
     networks:
-      - soa-twitter
+      soa-twitter:
+        ipv4_address: 10.3.0.22
 
   users:
     build: ./users
@@ -113,8 +116,11 @@ services:
     environment:
       - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+      - SERVICE_PORT=10002
+      - SERVICE_IP=10.3.0.23
     networks:
-      - soa-twitter
+      soa-twitter:
+        ipv4_address: 10.3.0.23
 
   follows:
     build: ./follows
@@ -127,8 +133,11 @@ services:
     environment:
       - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+      - SERVICE_PORT=10003
+      - SERVICE_IP=10.3.0.24
     networks:
-      - soa-twitter
+      soa-twitter:
+        ipv4_address: 10.3.0.24
 
   favorites:
     build: ./favorites
@@ -141,8 +150,11 @@ services:
     environment:
       - CONSUL_HOST=10.3.0.15
       - CONSUL_PORT=8500
+      - SERVICE_PORT=10004
+      - SERVICE_IP=10.3.0.25
     networks:
-      - soa-twitter
+      soa-twitter:
+        ipv4_address: 10.3.0.25
 
 networks:
   soa-twitter:
