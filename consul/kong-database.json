@@ -2,7 +2,7 @@
 	"service": {
 	 "name": "kong-database",
 	 "tags": ["kong-database"],
-	 "name" : "kong-database",
+	 "address" : "10.3.0.16",
 	 "port": 5432
 	}
 }
