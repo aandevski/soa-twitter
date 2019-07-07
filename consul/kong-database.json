@@ -1,0 +1,8 @@
+{
+	"service": {
+	 "name": "kong-database",
+	 "tags": ["kong-database"],
+	 "name" : "kong-database",
+	 "port": 5432
+	}
+}
