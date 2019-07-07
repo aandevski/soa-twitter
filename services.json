@@ -1,0 +1,40 @@
+{
+  "services": [
+    {
+      "address": "10.3.0.1",
+      "id": "dn0",
+      "name": "tweets",
+      "port": 10001,
+      "tags": [
+        "microservice_tweets"
+      ]
+    },
+    {
+      "address": "10.3.0.1",
+      "id": "dn1",
+      "name": "users",
+      "port": 10002,
+      "tags": [
+        "microservice_users"
+      ]
+    },
+    {
+      "address": "10.3.0.1",
+      "id": "dn2",
+      "name": "follows",
+      "port": 10003,
+      "tags": [
+        "microservice_follows"
+      ]
+    },
+    {
+      "address": "10.3.0.1",
+      "id": "dn3",
+      "name": "favorites",
+      "port": 10004,
+      "tags": [
+        "microservice_favorites"
+      ]
+    }
+  ]
+}

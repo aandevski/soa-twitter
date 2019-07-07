@@ -9,7 +9,7 @@ services:
       - POSTGRES_PASSWORD=kong
       - POSTGRES_DB=kong
     ports:
-    - "5433:5432"
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -29,13 +29,13 @@ services:
     environment:
       KONG_DATABASE: postgres
       KONG_PG_DATABASE: kong
-      KONG_PG_HOST: kong-database 
+      KONG_PG_HOST: kong-database
       KONG_PG_USER: kong
       KONG_PG_PASSWORD: kong
       KONG_PROXY_ACCESS_LOG: /dev/stdout
       KONG_ADMIN_ACCESS_LOG: /dev/stdout
       KONG_PROXY_ERROR_LOG: /dev/stderr
-      KONG_ADMIN_ERROR_LOG: /dev/stderr 
+      KONG_ADMIN_ERROR_LOG: /dev/stderr
     links:
       - kong-database
     restart: on-failure
@@ -52,7 +52,7 @@ services:
     ports:
       - 8000:8000
       - 8443:8443
-      - 8001:8001 
+      - 8001:8001
       - 8444:8444
     environment:
       - KONG_DATABASE=postgres
@@ -65,18 +65,18 @@ services:
       - KONG_PROXY_ACCESS_LOG=/dev/stdout
       - KONG_ADMIN_ACCESS_LOG=/dev/stdout
       - KONG_PROXY_ERROR_LOG=/dev/stderr
-      - KONG_ADMIN_ERROR_LOG=/dev/stderr 
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
     networks:
       - soa-twitter
 
   consul:
     image: consul:latest
     container_name: consul
-    depends_on:  
+    depends_on:
       kong-database:
         condition: service_healthy
     volumes:
-     - ./consul/kong-database.json:/consul/config/kong-database.json
+      - ./consul/kong-database.json:/consul/config/kong-database.json
     ports:
       - '8300:8300'
       - '8301:8301'
@@ -92,7 +92,7 @@ services:
     build: ./tweets
     container_name: microservice_tweets
     command: gunicorn --workers=1 -b :10001 app:app
-    depends_on:  
+    depends_on:
       - consul
     ports:
       - 10001:10001
@@ -109,7 +109,7 @@ services:
     build: ./users
     container_name: microservice_users
     command: gunicorn --workers=1 -b :10002 app:app
-    depends_on:  
+    depends_on:
       - consul
     ports:
       - 10002:10002
@@ -126,7 +126,7 @@ services:
     build: ./follows
     container_name: microservice_follows
     command: gunicorn --workers=1 -b :10003 app:app
-    depends_on:  
+    depends_on:
       - consul
     ports:
       - 10003:10003
@@ -143,7 +143,7 @@ services:
     build: ./favorites
     container_name: microservice_favorites
     command: gunicorn --workers=1 -b :10004 app:app
-    depends_on:  
+    depends_on:
       - consul
     ports:
       - 10004:10004
@@ -160,6 +160,6 @@ networks:
   soa-twitter:
     driver: bridge
     ipam:
-     config:
-       - subnet: 10.3.0.0/16
-         gateway: 10.3.0.1
+      config:
+        - subnet: 10.3.0.0/16
+          gateway: 10.3.0.1
