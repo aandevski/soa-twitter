@@ -48,7 +48,7 @@ def add_tweet():
         return (str(e))
 
 
-@app.route("/getall")
+@app.route("tweets/getall")
 def get_all():
     try:
         tweets = Tweet.query.all()
@@ -57,7 +57,7 @@ def get_all():
         return (str(e))
 
 
-@app.route("/get/<id_>")
+@app.route("tweets/get/<id_>")
 def get_by_id(id_):
     try:
         tweet = Tweet.query.filter_by(id=id_).first()

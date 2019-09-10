@@ -13,6 +13,13 @@ curl -i -X POST \
   --data 'paths[]=/tweets'
 
 curl -i -X POST \
+  --url http://$1/services/tweets/routes \
+  --data 'paths[]=/tweets'
+
+
+
+
+curl -i -X POST \
   --url http://$1/services/ \
   --data 'name=users' \
   --data 'url=http://users.service.consul'
