@@ -8,10 +8,11 @@ from db import db
 from models import User
 
 app = Flask(__name__)
-app.config.from_object(os.environ['APP_SETTINGS'])
+app.config.from_object(os.environ.get('APP_SETTINGS', 'config.DevelopmentConfig'))
 
 db.init_app(app)
-consul.register()
+if not app.config['DEBUG']:
+    consul.register()
 
 
 @app.route("/add", methods=['POST'])
