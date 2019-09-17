@@ -1,42 +1,24 @@
-# import consul
-# consul.register()
 import os
-from flask import Flask
-# import consul
+from datetime import datetime
 
-app = Flask(__name__)
-from flask_sqlalchemy import SQLAlchemy
+import consul
+from flask import Flask, request, jsonify
 
-# app.config.from_object(os.environ['APP_SETTINGS'])
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-# consul.register()
-
-
-import os
-from flask import Flask, request, jsonify, render_template
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-
-app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
+from db import db
 from models import User
 
+app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
 
-@app.route("/")
-def hello():
-    return "Hello from Users!"
+db.init_app(app)
+consul.register()
 
 
-@app.route("/add")
+@app.route("/add", methods=['POST'])
 def add_user():
-    name = request.args.get('name')
-    username = request.args.get('username')
-    date_published = request.args.get('date_published')
+    name = request.json.get('name')
+    username = request.json.get('username')
+    date_published = datetime.now()
     try:
         user = User(
             name=name,
@@ -50,7 +32,7 @@ def add_user():
         return (str(e))
 
 
-@app.route("/getall")
+@app.route("/")
 def get_all():
     try:
         users = User.query.all()
@@ -59,7 +41,7 @@ def get_all():
         return (str(e))
 
 
-@app.route("/get/<id_>")
+@app.route("/<id_>")
 def get_by_id(id_):
     try:
         user = User.query.filter_by(id=id_).first()
