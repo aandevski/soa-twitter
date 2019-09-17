@@ -19,10 +19,12 @@ if not app.config['DEBUG']:
 def add_user():
     name = request.json.get('name')
     username = request.json.get('username')
+    password = request.json.get('password')
     try:
         user = User(
             name=name,
             username=username,
+            password=password,
             created_at=datetime.now()
         )
         db.session.add(user)
