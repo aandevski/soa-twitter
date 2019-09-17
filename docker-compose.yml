@@ -45,7 +45,8 @@ services:
       - KONG_PROXY_ERROR_LOG=/dev/stderr
       - KONG_ADMIN_ERROR_LOG=/dev/stderr
     networks:
-      - soa-twitter
+      soa-twitter:
+        ipv4_address: 10.3.0.17
 
   consul:
     image: consul:latest
@@ -134,6 +135,8 @@ services:
       - SERVICE_IP=10.3.0.23
       - APP_SETTINGS=config.ProductionConfig
       - DATABASE_URL=postgresql://postgres:admin@10.3.0.33/users
+      - KONG_HOST=10.3.0.17
+      - KONG_PORT=8001
     networks:
       soa-twitter:
         ipv4_address: 10.3.0.23
