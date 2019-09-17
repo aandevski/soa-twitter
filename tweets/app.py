@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 import consul
 from flask import Flask, request, jsonify
@@ -15,14 +16,14 @@ consul.register()
 
 @app.route("/add", methods=['POST'])
 def add_tweet():
-    name = request.json.get('name')
+    text = request.json.get('text')
     author = request.json.get('author')
-    published = request.json.get('published')
+    published_at = datetime.now()
     try:
         tweet = Tweet(
-            name=name,
+            text=text,
             author=author,
-            published=published
+            published_at=published_at
         )
         db.session.add(tweet)
         db.session.commit()

@@ -5,14 +5,14 @@ class Tweet(db.Model):
     __tablename__ = 'tweets'
 
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
+    text = db.Column(db.String())
     author = db.Column(db.String())
-    published = db.Column(db.String())
+    published_at = db.Column(db.DateTime())
 
-    def __init__(self, name, author, published):
-        self.name = name
+    def __init__(self, text, author, published_at):
+        self.text = text
         self.author = author
-        self.published = published
+        self.published_at = published_at
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -20,7 +20,7 @@ class Tweet(db.Model):
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name,
+            'text': self.text,
             'author': self.author,
-            'published': self.published
+            'published_at': self.published_at
         }
