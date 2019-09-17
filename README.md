@@ -23,6 +23,8 @@ docker exec -it microservice_tweets /bin/bash
 python manage.py db upgrade
 ```
 
+Last, you need to register the endpoints with Kong using `sh install.sh`.
+
 ## Running a single service for development
 
 If you want to develop a particular service, you will need to host your own Postgres server.
