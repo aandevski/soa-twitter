@@ -1,40 +1,23 @@
 import os
-from flask import Flask
+
 import consul
+from flask import Flask, request, jsonify
 
-app = Flask(__name__)
-from flask_sqlalchemy import SQLAlchemy
-
-# app.config.from_object(os.environ['APP_SETTINGS'])
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
-# consul.register()
-
-
-import os
-from flask import Flask, request, jsonify, render_template
-from flask_sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-
-app.config.from_object(os.environ['APP_SETTINGS'])
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-
+from db import db
 from models import Tweet
 
+app = Flask(__name__)
+app.config.from_object(os.environ['APP_SETTINGS'])
 
-@app.route("/")
-def hello():
-    return "Hello from Tweets!"
+db.init_app(app)
+consul.register()
 
 
-@app.route("/add",methods=['POST','GET'])
+@app.route("/add", methods=['POST'])
 def add_tweet():
-    name = request.args.get('name')
-    author = request.args.get('author')
-    published = request.args.get('published')
+    name = request.json.get('name')
+    author = request.json.get('author')
+    published = request.json.get('published')
     try:
         tweet = Tweet(
             name=name,
@@ -43,12 +26,12 @@ def add_tweet():
         )
         db.session.add(tweet)
         db.session.commit()
-        return "Tweet added. tweet id={}".format(tweet.id, tweet.author,tweet.name)
+        return "Tweet added. tweet id={}".format(tweet.id, tweet.author, tweet.name)
     except Exception as e:
         return (str(e))
 
 
-@app.route("tweets/getall")
+@app.route("/")
 def get_all():
     try:
         tweets = Tweet.query.all()
@@ -57,7 +40,7 @@ def get_all():
         return (str(e))
 
 
-@app.route("tweets/get/<id_>")
+@app.route("/<id_>")
 def get_by_id(id_):
     try:
         tweet = Tweet.query.filter_by(id=id_).first()

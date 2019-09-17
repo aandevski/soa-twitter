@@ -1,4 +1,5 @@
-from app import db
+from db import db
+
 
 class Tweet(db.Model):
     __tablename__ = 'tweets'
@@ -21,5 +22,5 @@ class Tweet(db.Model):
             'id': self.id,
             'name': self.name,
             'author': self.author,
-            'published':self.published
+            'published': self.published
         }
