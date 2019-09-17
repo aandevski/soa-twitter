@@ -27,7 +27,7 @@ def add_tweet():
         )
         db.session.add(tweet)
         db.session.commit()
-        return "Tweet added. tweet id={}".format(tweet.id, tweet.author, tweet.name)
+        return jsonify(success=True), 201
     except Exception as e:
         return (str(e))
 
