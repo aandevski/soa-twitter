@@ -23,7 +23,7 @@ docker exec -it microservice_tweets /bin/bash
 python manage.py db upgrade
 ```
 
-Last, you need to register the endpoints with Kong using `sh install.sh`.
+Last, you need to register the endpoints with Kong using `sh install.sh 127.0.0.1:8001`.
 
 ## Running a single service for development
 
