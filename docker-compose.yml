@@ -67,14 +67,18 @@ services:
         ipv4_address: 10.3.0.15
 
   users_database:
-    image: postgres
+    image: postgres:latest
     restart: always
     container_name: users_database
     ports: 
      - "5434:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: admin
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=users
+    networks:
+      soa-twitter:
+        ipv4_address: 10.3.0.33
 
   tweets_database:
     image: postgres:latest
@@ -128,6 +132,8 @@ services:
       - CONSUL_PORT=8500
       - SERVICE_PORT=10002
       - SERVICE_IP=10.3.0.23
+      - APP_SETTINGS=config.DevelopmentConfig
+      - DATABASE_URL=postgresql://postgres:admin@10.3.0.33/users
     networks:
       soa-twitter:
         ipv4_address: 10.3.0.23
