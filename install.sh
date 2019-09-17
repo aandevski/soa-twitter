@@ -10,6 +10,8 @@ curl -i -X POST \
 curl -i -X POST \
   --url http://$1/services/tweets/routes \
   --data 'paths[]=/tweets'
+curl -X POST http://$1/services/tweets/plugins \
+  --data "name=key-auth"
 
 
 curl -i -X POST \
