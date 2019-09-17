@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify
 
 from db import db
 from models import User
+from auth import create_consumer, get_token
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('APP_SETTINGS', 'config.DevelopmentConfig'))
@@ -29,6 +30,7 @@ def add_user():
         )
         db.session.add(user)
         db.session.commit()
+        create_consumer(username)
         return "User added. book id={}".format(user.id)
     except Exception as e:
         return (str(e))
@@ -50,6 +52,22 @@ def get_by_id(id_):
         return jsonify(user.serialize())
     except Exception as e:
         return (str(e))
+
+
+@app.route("/login", methods=['POST'])
+def login():
+    username = request.json.get('username')
+    password = request.json.get('password')
+    try:
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            raise ValueError('Wrong username')
+        if not user.check_password(password):
+            raise ValueError('Wrong password')
+        key = get_token(username)
+        return jsonify(key=key)
+    except Exception as e:
+        return str(e)
 
 
 if __name__ == '__main__':
