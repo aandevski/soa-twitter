@@ -7,12 +7,12 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String())
     username = db.Column(db.String())
-    date_published = db.Column(db.String())
+    created_at = db.Column(db.DateTime())
 
-    def __init__(self, name, username, date_published):
+    def __init__(self, name, username, created_at):
         self.name = name
         self.username = username
-        self.date_published = date_published
+        self.created_at = created_at
 
     def __repr__(self):
         return '<id {}>'.format(self.id)
@@ -21,6 +21,6 @@ class User(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'author': self.username,
-            'published': self.date_published
+            'username': self.username,
+            'created_at': self.created_at
         }

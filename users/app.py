@@ -18,12 +18,11 @@ consul.register()
 def add_user():
     name = request.json.get('name')
     username = request.json.get('username')
-    date_published = datetime.now()
     try:
         user = User(
             name=name,
             username=username,
-            date_published=date_published
+            created_at=datetime.now()
         )
         db.session.add(user)
         db.session.commit()
