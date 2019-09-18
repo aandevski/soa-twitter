@@ -18,9 +18,11 @@ if not app.config['DEBUG']:
 @app.route("/add", methods=['POST'])
 def add_tweet():
     text = request.json.get('text')
-    author = request.json.get('author')
+    author = request.headers.get('X-Consumer-Username')
     published_at = datetime.now()
     try:
+        if request.headers.get('X-Anonymous-Consumer') == 'true':
+            raise Exception('User not logged in')
         tweet = Tweet(
             text=text,
             author=author,
