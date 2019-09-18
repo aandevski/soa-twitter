@@ -1,6 +1,12 @@
 #!/bin/sh
 
-# configrued at 127.0.0.1:8100
+PLUGINREPLY=`curl -X POST http://$1/plugins --data "name=key-auth"`
+ANONREPLY=`curl -d "custom_id=anonymous" http://$1/consumers/`
+
+PLUGINID=`echo $PLUGINREPLY | sed 's/.*"id":"\([^"]*\)".*/\1/'`
+ANONID=`echo $ANONREPLY | sed 's/.*"id":"\([^"]*\)".*/\1/'`
+curl --request PATCH http://$1/plugins/$PLUGINID \
+  --data "config.anonymous=$ANONID"
 
 
 curl -i -X POST \
@@ -10,8 +16,6 @@ curl -i -X POST \
 curl -i -X POST \
   --url http://$1/services/tweets/routes \
   --data 'paths[]=/tweets'
-curl -X POST http://$1/services/tweets/plugins \
-  --data "name=key-auth"
 
 
 curl -i -X POST \
@@ -21,8 +25,6 @@ curl -i -X POST \
 curl -i -X POST \
   --url http://$1/services/users/routes \
   --data 'paths[]=/users'
-curl -X POST http://$1/services/users/plugins \
-  --data "name=key-auth"
 
 
 curl -i -X POST \
