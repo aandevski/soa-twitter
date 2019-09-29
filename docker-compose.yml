@@ -105,6 +105,25 @@ services:
       soa-twitter:
         ipv4_address: 10.3.0.32
 
+  follows_database:
+    image: postgres:latest
+    restart: always
+    container_name: follows_database
+    ports:
+      - "5436:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=follows
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      soa-twitter:
+        ipv4_address: 10.3.0.34
+
   tweets:
     build: ./tweets
     container_name: microservice_tweets
@@ -153,6 +172,7 @@ services:
     command: gunicorn --workers=1 -b :10003 app:app
     depends_on:
       - consul
+      - follows_database
     ports:
       - 10003:10003
     environment:
@@ -160,6 +180,8 @@ services:
       - CONSUL_PORT=8500
       - SERVICE_PORT=10003
       - SERVICE_IP=10.3.0.24
+      - APP_SETTINGS=config.ProductionConfig
+      - DATABASE_URL=postgresql://postgres:admin@10.3.0.34/follows
     networks:
       soa-twitter:
         ipv4_address: 10.3.0.24
