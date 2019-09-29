@@ -77,6 +77,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=users
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       soa-twitter:
         ipv4_address: 10.3.0.33
@@ -126,6 +131,7 @@ services:
     command: gunicorn --workers=1 -b :10002 app:app
     depends_on:
       - consul
+      - users_database
     ports:
       - 10002:10002
     environment:
