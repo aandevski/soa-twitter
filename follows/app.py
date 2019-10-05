@@ -35,9 +35,13 @@ def get_followers_of_user(id_):
 
 @app.route("/follow", methods=['POST'])
 def follow_user():
-    follower_id = request.json.get('follower_id')
+    follower_id = request.headers.get('X-Consumer-Username')
     following_id = request.json.get('following_id')
     try:
+        if request.headers.get('X-Anonymous-Consumer') == 'true':
+            raise Exception('User not logged in')
+        if not following_id:
+            raise Exception('following id must be provided')
         following = Following(
             follower_id=follower_id,
             following_id=following_id,
@@ -50,9 +54,12 @@ def follow_user():
         return (str(e))
 
 
-@app.route("/<follower_id_>/unfollow/<following_id_>", methods=['DELETE'])
-def unfollow_user(follower_id_, following_id_):
+@app.route("/unfollow/<following_id_>", methods=['DELETE'])
+def unfollow_user(following_id_):
+    follower_id_ = request.headers.get('X-Consumer-Username')
     try:
+        if request.headers.get('X-Anonymous-Consumer') == 'true':
+            raise Exception('User not logged in')
         following = Following.query.filter_by(following_id=following_id_, follower_id=follower_id_).first()
         db.session.delete(following)
         db.session.commit()

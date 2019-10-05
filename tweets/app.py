@@ -56,7 +56,7 @@ def get_by_id(id_):
 @app.route("/from_user/<user_id_>")
 def get_by_user_id(user_id_):
     try:
-        tweet = Tweet.query.filter_by(author=user_id_).first()
+        tweet = Tweet.query.filter_by(author=user_id_).all()
         return jsonify(tweet.serialize())
     except Exception as e:
         return (str(e))
