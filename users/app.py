@@ -64,7 +64,7 @@ def login():
             raise ValueError('Wrong username')
         if not user.check_password(password):
             raise ValueError('Wrong password')
-        key = get_token(username)
+        key = get_token(user.id)
         return jsonify(key=key)
     except Exception as e:
         return str(e)

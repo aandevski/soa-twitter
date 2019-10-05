@@ -13,8 +13,8 @@ def create_consumer(id):
         raise Exception('Failed')
 
 
-def get_token(username):
-    request_url = f"http://{KONG_ADDRESS}/consumers/{username}/key-auth"
+def get_token(id):
+    request_url = f"http://{KONG_ADDRESS}/consumers/{id}/key-auth"
     reply = requests.post(request_url)
     if reply.status_code != requests.status_codes.codes.created:
         raise Exception('Failed')
