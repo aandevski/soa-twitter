@@ -30,7 +30,7 @@ def add_user():
         )
         db.session.add(user)
         db.session.commit()
-        create_consumer(username)
+        create_consumer(user.id)
         return "User added. book id={}".format(user.id)
     except Exception as e:
         return (str(e))
