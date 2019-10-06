@@ -6,6 +6,7 @@ from flask import Flask, request, jsonify
 
 from db import db
 from models import Following
+from service import check_user_existence
 
 app = Flask(__name__)
 app.config.from_object(os.environ.get('APP_SETTINGS', 'config.DevelopmentConfig'))
@@ -42,6 +43,7 @@ def follow_user():
             raise Exception('User not logged in')
         if not following_id:
             raise Exception('following id must be provided')
+        check_user_existence(following_id)
         following = Following(
             follower_id=follower_id,
             following_id=following_id,
@@ -51,7 +53,7 @@ def follow_user():
         db.session.commit()
         return jsonify(success=True), 201
     except Exception as e:
-        return (str(e))
+        return jsonify(error=404, text=str(e)), 404
 
 
 @app.route("/unfollow/<following_id_>", methods=['DELETE'])

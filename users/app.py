@@ -49,9 +49,11 @@ def get_all():
 def get_by_id(id_):
     try:
         user = User.query.filter_by(id=id_).first()
+        if not user:
+            raise ValueError("User with id={} does not exist".format(id_))
         return jsonify(user.serialize())
     except Exception as e:
-        return (str(e))
+        return jsonify(error=404, text=str(e)), 404
 
 
 @app.route("/login", methods=['POST'])

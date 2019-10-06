@@ -71,8 +71,8 @@ services:
     image: postgres:latest
     restart: always
     container_name: users_database
-    ports: 
-     - "5434:5432"
+    ports:
+      - "5434:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
@@ -138,6 +138,7 @@ services:
       - CONSUL_PORT=8500
       - SERVICE_PORT=10001
       - SERVICE_IP=10.3.0.22
+      - SERVICE_NAME=tweets
       - APP_SETTINGS=config.ProductionConfig
       - DATABASE_URL=postgresql://postgres:admin@10.3.0.32/tweets
     networks:
@@ -158,6 +159,7 @@ services:
       - CONSUL_PORT=8500
       - SERVICE_PORT=10002
       - SERVICE_IP=10.3.0.23
+      - SERVICE_NAME=users
       - APP_SETTINGS=config.ProductionConfig
       - DATABASE_URL=postgresql://postgres:admin@10.3.0.33/users
       - KONG_HOST=10.3.0.17
@@ -180,6 +182,8 @@ services:
       - CONSUL_PORT=8500
       - SERVICE_PORT=10003
       - SERVICE_IP=10.3.0.24
+      - SERVICE_NAME=follows
+      - USERS_SERVICE_NAME=users
       - APP_SETTINGS=config.ProductionConfig
       - DATABASE_URL=postgresql://postgres:admin@10.3.0.34/follows
     networks:
@@ -199,6 +203,7 @@ services:
       - CONSUL_PORT=8500
       - SERVICE_PORT=10004
       - SERVICE_IP=10.3.0.25
+      - SERVICE_NAME=favorites
     networks:
       soa-twitter:
         ipv4_address: 10.3.0.25

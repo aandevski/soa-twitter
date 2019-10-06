@@ -48,9 +48,11 @@ def get_all():
 def get_by_id(id_):
     try:
         tweet = Tweet.query.filter_by(id=id_).first()
+        if not tweet:
+            raise ValueError("Tweet with id={} does not exist".format(id_))
         return jsonify(tweet.serialize())
     except Exception as e:
-        return (str(e))
+        return jsonify(error=404, text=str(e)), 404
 
 
 @app.route("/from_user/<user_id_>")
