@@ -139,6 +139,8 @@ services:
       - SERVICE_PORT=10001
       - SERVICE_IP=10.3.0.22
       - SERVICE_NAME=tweets
+      - KONG_HOST=10.3.0.17
+      - KONG_PORT=8000
       - APP_SETTINGS=config.ProductionConfig
       - DATABASE_URL=postgresql://postgres:admin@10.3.0.32/tweets
     networks:

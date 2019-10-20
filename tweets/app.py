@@ -7,6 +7,8 @@ from flask import Flask, request, jsonify
 from db import db
 from models import Tweet
 
+from service import check_user_existence
+
 app = Flask(__name__)
 app.config.from_object(os.environ.get('APP_SETTINGS', 'config.DevelopmentConfig'))
 
@@ -58,6 +60,7 @@ def get_by_id(id_):
 @app.route("/from_user/<user_id_>")
 def get_by_user_id(user_id_):
     try:
+        check_user_existence(user_id_)
         tweets = Tweet.query.filter_by(author=user_id_).all()
         serialized_tweets = [tweet.serialize() for tweet in tweets]
         return jsonify(tweets=serialized_tweets)
