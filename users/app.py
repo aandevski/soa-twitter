@@ -4,6 +4,7 @@ from datetime import datetime
 import consul
 from flask import Flask, request, jsonify
 
+from circuitbreaker import circuit
 from db import db
 from models import User
 from auth import create_consumer, get_token

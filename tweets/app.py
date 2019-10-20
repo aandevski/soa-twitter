@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify
 from db import db
 from models import Tweet
 
+from circuitbreaker import circuit
 from service import check_user_existence
 
 app = Flask(__name__)
@@ -18,6 +19,7 @@ if not app.config['DEBUG']:
 
 
 @app.route("/add", methods=['POST'])
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def add_tweet():
     text = request.json.get('text')
     author = request.headers.get('X-Consumer-Username')
@@ -58,6 +60,7 @@ def get_by_id(id_):
 
 
 @app.route("/from_user/<user_id_>")
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def get_by_user_id(user_id_):
     try:
         check_user_existence(user_id_)

@@ -4,6 +4,7 @@ from datetime import datetime
 import consul
 from flask import Flask, request, jsonify
 
+from circuitbreaker import circuit
 from db import db
 from models import Following
 from service import check_user_existence
@@ -17,6 +18,7 @@ if not app.config['DEBUG']:
 
 
 @app.route("/following/<id_>")
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def get_following_of_user(id_):
     try:
         check_user_existence(id_)
@@ -27,6 +29,7 @@ def get_following_of_user(id_):
 
 
 @app.route("/followers/<id_>")
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def get_followers_of_user(id_):
     try:
         check_user_existence(id_)
@@ -37,6 +40,7 @@ def get_followers_of_user(id_):
 
 
 @app.route("/follow", methods=['POST'])
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def follow_user():
     follower_id = request.headers.get('X-Consumer-Username')
     following_id = request.json.get('following_id')
@@ -59,6 +63,7 @@ def follow_user():
 
 
 @app.route("/unfollow/<following_id_>", methods=['DELETE'])
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def unfollow_user(following_id_):
     follower_id_ = request.headers.get('X-Consumer-Username')
     try:
