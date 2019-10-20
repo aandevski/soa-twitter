@@ -19,6 +19,7 @@ if not app.config['DEBUG']:
 @app.route("/following/<id_>")
 def get_following_of_user(id_):
     try:
+        check_user_existence(id_)
         following = Following.query.filter_by(follower_id=id_).all()
         return jsonify([{'following_id': f.following_id} for f in following])
     except Exception as e:
@@ -28,6 +29,7 @@ def get_following_of_user(id_):
 @app.route("/followers/<id_>")
 def get_followers_of_user(id_):
     try:
+        check_user_existence(id_)
         following = Following.query.filter_by(following_id=id_).all()
         return jsonify([{'follower_id': f.follower_id} for f in following])
     except Exception as e:
@@ -62,6 +64,7 @@ def unfollow_user(following_id_):
     try:
         if request.headers.get('X-Anonymous-Consumer') == 'true':
             raise Exception('User not logged in')
+        check_user_existence(following_id_)
         following = Following.query.filter_by(following_id=following_id_, follower_id=follower_id_).first()
         db.session.delete(following)
         db.session.commit()
