@@ -124,6 +124,25 @@ services:
       soa-twitter:
         ipv4_address: 10.3.0.34
 
+  favorites_database:
+    image: postgres:latest
+    restart: always
+    container_name: favorites_database
+    ports:
+      - "5437:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=favorites
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      soa-twitter:
+        ipv4_address: 10.3.0.35
+
   tweets:
     build: ./tweets
     container_name: microservice_tweets
@@ -207,6 +226,11 @@ services:
       - SERVICE_PORT=10004
       - SERVICE_IP=10.3.0.25
       - SERVICE_NAME=favorites
+      - KONG_HOST=10.3.0.17
+      - KONG_PORT=8000
+      - APP_SETTINGS=config.ProductionConfig
+      - DATABASE_URL=postgresql://postgres:admin@10.3.0.35/favorites
+ 
     networks:
       soa-twitter:
         ipv4_address: 10.3.0.25
