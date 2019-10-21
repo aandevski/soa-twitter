@@ -43,3 +43,11 @@ curl -i -X POST \
 curl -i -X POST \
   --url http://$1/services/favorites/routes \
   --data 'paths[]=/favorites'
+
+curl -i -X POST \
+  --url http://$1/services/ \
+  --data 'name=homepage' \
+  --data 'url=http://homepage.service.consul'
+curl -i -X POST \
+  --url http://$1/services/homepage/routes \
+  --data 'paths[]=/homepage'

@@ -235,6 +235,29 @@ services:
       soa-twitter:
         ipv4_address: 10.3.0.25
 
+  homepage:
+    build: ./homepage
+    container_name: microservice_homepage
+    command: gunicorn --workers=1 -b :10005 app:app
+    depends_on:
+      - consul
+    ports:
+      - 10005:10005
+    environment:
+      - CONSUL_HOST=10.3.0.15
+      - CONSUL_PORT=8500
+      - SERVICE_PORT=10005
+      - SERVICE_IP=10.3.0.26
+      - SERVICE_NAME=homepage
+      - KONG_HOST=10.3.0.17
+      - KONG_PORT=8000
+      - APP_SETTINGS=config.ProductionConfig
+
+    networks:
+      soa-twitter:
+        ipv4_address: 10.3.0.26
+
+
 networks:
   soa-twitter:
     driver: bridge

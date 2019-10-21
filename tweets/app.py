@@ -63,7 +63,7 @@ def get_by_user_id(user_id_):
         check_user_existence(user_id_)
         tweets = Tweet.query.filter_by(author=user_id_).all()
         serialized_tweets = [tweet.serialize() for tweet in tweets]
-        return jsonify(tweets=serialized_tweets)
+        return jsonify(serialized_tweets)
     except Exception as e:
         return (str(e))
 
