@@ -2,6 +2,7 @@ import os
 from flask import Flask, jsonify
 import consul
 
+from circuitbreaker import circuit
 from db import db
 from models import Favorite
 from service import user_required, check_user_existence, check_tweet_existence, get_tweet, get_user
@@ -15,6 +16,7 @@ if not app.config['DEBUG']:
 
 
 @app.route("/user/<id_>")
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def get_favorite_tweets_of_user(id_):
     try:
         check_user_existence(id_)
@@ -26,6 +28,7 @@ def get_favorite_tweets_of_user(id_):
 
 
 @app.route("/tweet/<id_>")
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def get_users_favoriting_tweet(id_):
     try:
         check_tweet_existence(id_)
@@ -38,6 +41,7 @@ def get_users_favoriting_tweet(id_):
 
 @app.route("/tweet/<id_>", methods=('POST', ))
 @user_required
+@circuit(failure_threshold=10, expected_exception=ConnectionError)
 def set_tweet_as_favorite(user, id_):
     try:
         check_tweet_existence(id_)

@@ -23,3 +23,4 @@ urllib3==1.25.6
 Werkzeug==0.16.0
 pyyaml==5.1.2
 pybreaker==0.5.0
+circuitbreaker==1.2
